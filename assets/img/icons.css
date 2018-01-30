@@ -1,0 +1,36 @@
+
+.codepen {
+  background-image: url(icons.png);
+  background-position: 0px 0px;
+  width: 512px;
+  height: 512px;
+}
+
+.facebook {
+  background-image: url(icons.png);
+  background-position: 0px -512px;
+  width: 512px;
+  height: 512px;
+}
+
+.github {
+  background-image: url(icons.png);
+  background-position: 0px -1024px;
+  width: 512px;
+  height: 512px;
+}
+
+.instagram {
+  background-image: url(icons.png);
+  background-position: 0px -1536px;
+  width: 512px;
+  height: 512px;
+}
+
+.twitter {
+  background-image: url(icons.png);
+  background-position: 0px -2048px;
+  width: 512px;
+  height: 512px;
+}
+

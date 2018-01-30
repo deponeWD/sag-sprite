@@ -1,0 +1,8 @@
+# Garbage files
+.DS_Store
+
+# package-lock
+package-lock.json
+
+# Dependency directory
+node_modules
