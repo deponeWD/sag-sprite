@@ -12,48 +12,64 @@ var path = require('path');
 gulp.task('svgsprite', function () {
   return gulp
     .src('assets/img/icons/*.svg')
-    .pipe(svgmin(function (file) {
-      var prefix = path.basename(file.relative, path.extname(file.relative));
-      return {
-        plugins: [{
-          removeDoctype: true
-        }, {
-          cleanupIDs: {
-            prefix: prefix + '-',
-            minify: true
-          }
-        }]
-      }
+    .pipe(svgstore({
+      fileName: 'sprite.svg',
+      prefix: 'icon-'
     }))
-    .pipe(svgstore())
+    .pipe(cheerio({
+      run: function ($) {
+        $('[fill]').removeAttr('fill');
+      },
+      parserOptions: { xmlMode: true }
+    }))
+    .pipe(svgmin({
+      plugins: [{
+        removeDoctype: true
+      }, {
+        removeComments: true
+      }, {
+        cleanupNumericValues: {
+          floatPrecision: 2
+        }
+      }, {
+        cleanupIDs: false
+      }]
+    }))
     .pipe(gulp.dest('assets/img'));
 });
 
 function colorize (color) {
-  // Uncommend 1. / 2. and 3. if you need alternative colors in your png-sprite
   // 1. set variable
-  // var sink;
+  var sink;
   return (lazypipe()
     // 2. clone icons into variable
-    // .pipe(function () {
-    //   sink = clone.sink();
-    //   return sink;
-    // })
+    .pipe(function () {
+      sink = clone.sink();
+      return sink;
+    })
     .pipe(cheerio, function ($) {
-      $('svg').attr('fill', color).attr('stroke', color);
+      $('svg').attr('fill', color);
     })
     // 3. Add suffix and combine alternative icons
-    // .pipe(rename, {suffix: '-' + color})
-    // .pipe(function () {
-    //   return sink.tap();
-    // })
+    .pipe(rename, {suffix: '-' + color})
+    .pipe(function () {
+      return sink.tap();
+    })
   )();
 }
 
 gulp.task('svgfallback', function () {
   return gulp
     .src('assets/img/icons/*.svg', {base: 'assets/img/icons'})
-    .pipe(colorize('rgb(255,255,255)'))
+    // Use this if only one color of icons is needed in fallback PNG
+    .pipe(cheerio({
+      run: function ($) {
+        $('svg').attr('fill', 'rgb(255,255,255)');
+      },
+      parserOptions: { xmlMode: true }
+    }))
+    // Use this if you need icons in two colors in fallback PNG
+    // .pipe(colorize('rgb(255,255,255)'))
     .pipe(svgfallback())
     .pipe(gulp.dest('assets/img'));
 });
