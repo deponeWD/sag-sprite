@@ -7,6 +7,7 @@ var clone = require('gulp-clone');
 var cheerio = require('gulp-cheerio');
 var rename = require('gulp-rename');
 var svgfallback = require('gulp-svgfallback');
+var imageOptim = require('gulp-imageoptim');
 var path = require('path');
 
 gulp.task('svgsprite', function () {
@@ -71,5 +72,7 @@ gulp.task('svgfallback', function () {
     // Use this if you need icons in two colors in fallback PNG
     // .pipe(colorize('rgb(255,255,255)'))
     .pipe(svgfallback())
+    // imageOptim takes a while, use only when building for production
+    // .pipe(imageOptim.optimize())
     .pipe(gulp.dest('assets/img'));
 });
